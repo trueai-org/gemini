@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading IT Force</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Prevent scrollbars during loading */
+            font-family: 'Segoe UI', 'Meiryo', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', Osaka, Arial, sans-serif;
+        }
+
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #002A52; /* Dark Navy Blue */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loader-animation-container {
+            position: relative;
+            width: 300px; /* Adjust as needed */
+            height: 100px; /* Adjust as needed */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader-brand {
+            font-size: 2.8em;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-shadow: 0 0 10px rgba(0, 174, 239, 0.7), 0 0 20px rgba(0, 174, 239, 0.5);
+            z-index: 10; /* Ensure brand text is above particles if they overlap */
+        }
+
+        .particle {
+            position: absolute;
+            /* width and height are now varied by nth-child for more dynamic look */
+            background-color: #00AEEF; /* Light, vibrant blue */
+            border-radius: 50%;
+            opacity: 0;
+            animation-name: flowParticle; /* Corrected: animation to animation-name */
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            box-shadow: 0 0 5px #00AEEF, 0 0 10px #00AEEF;
+        }
+
+        /* Distribute particles randomly and vary animations */
+        /* Removed fixed left/right, top is set, animation handles horizontal movement */
+        .particle:nth-child(1) { width: 6px; height: 6px; top: 10%; animation-delay: 0s; animation-duration: 3.5s; }
+        .particle:nth-child(2) { width: 4px; height: 4px; top: 30%; animation-delay: -0.5s; animation-duration: 3s; }
+        .particle:nth-child(3) { width: 7px; height: 7px; top: 50%; animation-delay: -1s; animation-duration: 4s; }
+        .particle:nth-child(4) { width: 5px; height: 5px; top: 70%; animation-delay: -1.5s; animation-duration: 2.5s; }
+        .particle:nth-child(5) { width: 6px; height: 6px; top: 90%; animation-delay: -2s; animation-duration: 3.8s; }
+        .particle:nth-child(6) { width: 4px; height: 4px; top: 20%; animation-delay: -0.2s; animation-duration: 3.2s; background-color: #FFFFFF; }
+        .particle:nth-child(7) { width: 7px; height: 7px; top: 40%; animation-delay: -0.8s; animation-duration: 2.8s; }
+        .particle:nth-child(8) { width: 5px; height: 5px; top: 60%; animation-delay: -1.2s; animation-duration: 3.6s; background-color: #FFFFFF; }
+        .particle:nth-child(9) { width: 6px; height: 6px; top: 80%; animation-delay: -1.8s; animation-duration: 3.3s; }
+        .particle:nth-child(10) { width: 4px; height: 4px; top: 45%; animation-delay: -2.2s; animation-duration: 2.9s; background-color: #FFFFFF; }
+
+
+        @keyframes flowParticle {
+            0% {
+                left: -10%; /* Start off-screen to the left */
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            20% {
+                opacity: 0.7; /* Fade in */
+                transform: scale(1);
+            }
+            80% {
+                opacity: 0.7; /* Maintain opacity */
+                transform: scale(1);
+            }
+            100% {
+                left: 110%; /* End off-screen to the right */
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+
+        .loader-text {
+            margin-top: 25px;
+            font-size: 1.1em;
+            color: #CCCCCC; /* Light Gray */
+            letter-spacing: 1px;
+        }
+
+        /* Example of how to hide the loader - JS will handle this part */
+        /*
+        body.loaded .loader-wrapper {
+            opacity: 0;
+            pointer-events: none;
+        }
+        */
+
+        @media (prefers-reduced-motion: reduce) {
+          .particle {
+            animation-name: none !important; /* Stop the flow animation */
+            opacity: 0.3 !important; /* Make them subtly visible but static */
+            /* Static positioning for reduced motion */
+          }
+          .particle:nth-child(1) { top: 20%; left: 30%; width:5px; height:5px; }
+          .particle:nth-child(2) { top: 30%; left: 70%; width:3px; height:3px; }
+          .particle:nth-child(3) { top: 40%; left: 40%; width:6px; height:6px; }
+          .particle:nth-child(4) { top: 50%; left: 60%; width:4px; height:4px; }
+          .particle:nth-child(5) { top: 60%; left: 35%; width:5px; height:5px; }
+          .particle:nth-child(6) { top: 70%; left: 65%; background-color: #FFFFFF; width:3px; height:3px; }
+          .particle:nth-child(7) { top: 80%; left: 45%; width:6px; height:6px; }
+          .particle:nth-child(8) { top: 25%; left: 55%; background-color: #FFFFFF; width:4px; height:4px; }
+          .particle:nth-child(9) { top: 35%; left: 25%; width:5px; height:5px; }
+          .particle:nth-child(10) { top: 45%; left: 75%; background-color: #FFFFFF; width:3px; height:3px; }
+
+          .loader-brand {
+              /* If text-shadow animation was too much, reduce it here */
+              text-shadow: 0 0 8px rgba(0, 174, 239, 0.6);
+          }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader-wrapper">
+        <div class="loader-animation-container">
+            <div class="loader-brand">IT FORCE</div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="loader-text">ローディング中...</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loaderWrapper = document.querySelector('.loader-wrapper');
+            const minDisplayTime = 1500; // Minimum display time in milliseconds (e.g., 1.5 seconds)
+            const maxLoadTime = 10000;   // Maximum time to wait for window.load (e.g., 10 seconds)
+
+            let pageLoaded = false;
+            let minTimeElapsed = false;
+            let maxTimeTimeoutOccurred = false;
+
+            // Function to hide the loader
+            function hideLoader() {
+                if (loaderWrapper) {
+                    loaderWrapper.style.opacity = '0';
+                    // Optional: remove the loader from DOM after transition
+                    setTimeout(() => {
+                        if (loaderWrapper.parentNode) {
+                            loaderWrapper.parentNode.removeChild(loaderWrapper);
+                        }
+                    }, 500); // Match CSS transition duration
+                }
+                // Add a class to body if you need to signal other scripts that loading is done
+                document.body.classList.add('loaded');
+            }
+
+            // Check if both conditions (page loaded AND min time elapsed) are met
+            function tryHideLoader() {
+                if ((pageLoaded && minTimeElapsed) || maxTimeTimeoutOccurred) {
+                    hideLoader();
+                }
+            }
+
+            // 1. Set timer for minimum display time
+            setTimeout(() => {
+                minTimeElapsed = true;
+                tryHideLoader();
+            }, minDisplayTime);
+
+            // 2. Listen for window load event
+            window.addEventListener('load', () => {
+                pageLoaded = true;
+                tryHideLoader();
+            });
+
+            // 3. Set a safety timeout for hiding the loader
+            setTimeout(() => {
+                if (!pageLoaded && !minTimeElapsed) { // Only force if page didn't load and min time also not necessarily met by natural flow
+                    maxTimeTimeoutOccurred = true;
+                    // console.warn('Loader timed out or page load is extremely fast and minTime ensures visibility.');
+                    tryHideLoader();
+                } else if (!pageLoaded && minTimeElapsed) { // If min time passed but page still loading
+                     maxTimeTimeoutOccurred = true; // Still consider it a timeout for page load
+                    // console.warn('Loader timed out post minDisplayTime.');
+                    tryHideLoader();
+                }
+            }, maxLoadTime);
+
+            // Ensure loader is visible initially (though CSS handles this, good for fallback)
+            if (loaderWrapper) {
+                loaderWrapper.style.opacity = '1';
+            }
+        });
+    </script>
+</body>
+</html>
